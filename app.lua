@@ -66,10 +66,10 @@ while running do
     local event = ffi.new("SDL_Event")
     while sdl.SDL_PollEvent(event) ~= 0 do
         if event.type == sdl.SDL_MOUSEBUTTONDOWN then
-            button = true
+            mouse.button = true
         end
         if event.type == sdl.SDL_MOUSEBUTTONUP then
-            button = false
+            mouse.button = false
         end
         -- Check for quit event
         if event.type == sdl.SDL_QUIT or
@@ -92,7 +92,7 @@ while running do
     -- Set draw color and draw a filled rectangle
     sdl.SDL_SetRenderDrawColor(renderer, 255, 0, 255, 255)
     local rect2 = ffi.new("SDL_Rect", { x = 100 - 40, y = 100 - 20, w = 200, h = 100 })
-    if button then rect2.y = rect2.y + 150 end
+    if mouse.button then rect2.y = rect2.y + 150 end
     sdl.SDL_RenderFillRect(renderer, rect2)
 
     -- Present the renderer

@@ -1,4 +1,10 @@
 {
+    "Lua.diagnostics.globals": [
+        "love",
+        "renderer",
+        "ffi",
+        "sdl"
+    ],
     "Lua.diagnostics.disable": [
         "lowercase-global"
     ]

@@ -1,13 +1,29 @@
 {
     "configurations": [
         {
+            // https://marketplace.visualstudio.com/items?itemName=tomblind.local-lua-debugger-vscode
             "type": "lua-local",
             "request": "launch",
-            "name": "Debug LuaJIT",
+            "name": "LuaJIT Debug",
             "program": {
                 "lua": "luajit",
                 "file": "app.lua"
             }
+        },
+        {
+            // https://marketplace.visualstudio.com/items?itemName=tomblind.local-lua-debugger-vscode
+            "type": "lua-local",
+            "request": "launch",
+            "name": "Love2D Debug",
+            "program": {
+                "command": "love"
+            },
+            "args": [
+                "${workspaceFolder}"
+            ],
+            "scriptRoots": [
+                "${workspaceFolder}"
+            ]
         }
     ]
 }

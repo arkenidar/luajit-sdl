@@ -1,5 +1,9 @@
-local ffi = require("ffi")
-local sdl = ffi.load("SDL2")
+-- global variables : ffi, sdl, renderer
+
+-- global variable : ffi
+ffi = require("ffi")
+-- global variable : sdl
+sdl = ffi.load("SDL2")
 
 -- LuaJIT 2D Game Development
 -- https://chatgpt.com/share/470cd945-7e27-42bd-8aff-e6ab84b2ead4
@@ -52,12 +56,16 @@ end
 print("window init done")
 
 -- Create a renderer
-local renderer = sdl.SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED)
+-- global variable : renderer
+renderer = sdl.SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED)
 if renderer == nil then
     error("SDL_CreateRenderer failed")
 end
 
 -- Global variables
+
+-- Optional require to merge "bounce.lua" with this file ( filename : "app.lua" ) .
+--- require("bounce")
 
 -- Create a rectangle
 -- rect3 is global in order to keep state across drawing frames
@@ -68,6 +76,8 @@ local running = true
 print("main loop started")
 
 local mouse = { x = -1, y = -1, button = false, button_before = false, button_clicked = false }
+
+local time_ticks = sdl.SDL_GetTicks()
 
 while running do
     -- Poll events
@@ -101,9 +111,18 @@ while running do
     -- after loop of SDL_PollEvent
     mouse.button_clicked = mouse.button and not mouse.button_before
 
+    local dt -- elapsed time in fractions of seconds
+    delta_ticks = sdl.SDL_GetTicks() - time_ticks
+    time_ticks = sdl.SDL_GetTicks()
+    dt = delta_ticks / 1000 -- milliseconds to seconds
+
+    if love and love.update then love.update(dt) end
+
     -- Clear the screen
     sdl.SDL_SetRenderDrawColor(renderer, 50, 50, 50, 255)
     sdl.SDL_RenderClear(renderer)
+
+    if love and love.draw then love.draw() end
 
     -- Demonstrating "mouse.y" and "mouse.y"
     -- Set draw color and draw a filled rectangle

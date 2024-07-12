@@ -1290,4 +1290,6 @@ void SDL_GL_SwapWindow(SDL_Window* window);
 
 //////////////////////////////////////////////
 
+Uint32 SDL_GetTicks(void);
+
 ]]

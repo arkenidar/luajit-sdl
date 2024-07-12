@@ -57,14 +57,32 @@ if renderer == nil then
     error("SDL_CreateRenderer failed")
 end
 
+-- Global variables
+
+-- Create a rectangle
+-- rect3 is global in order to keep state across drawing frames
+local rect3 = ffi.new("SDL_Rect", { x = 100 - 40 + 50, y = 100 - 20 + 50, w = 200, h = 100 })
+
 -- Main loop
 local running = true
 print("main loop started")
-local mouse = { x = -1, y = -1, button = false }
+
+local mouse = { x = -1, y = -1, button = false, button_before = false, button_clicked = false }
+
 while running do
     -- Poll events
     local event = ffi.new("SDL_Event")
+
+    -- before loop of SDL_PollEvent
+    mouse.button_before = mouse.button
+
     while sdl.SDL_PollEvent(event) ~= 0 do
+        -- Get mouse position
+        if event.type == sdl.SDL_MOUSEMOTION then
+            mouse.x = event.motion.x
+            mouse.y = event.motion.y
+        end
+        -- Handle mouse button
         if event.type == sdl.SDL_MOUSEBUTTONDOWN then
             mouse.button = true
         end
@@ -80,20 +98,32 @@ while running do
         end
     end
 
+    -- after loop of SDL_PollEvent
+    mouse.button_clicked = mouse.button and not mouse.button_before
+
     -- Clear the screen
     sdl.SDL_SetRenderDrawColor(renderer, 50, 50, 50, 255)
     sdl.SDL_RenderClear(renderer)
 
+    -- Demonstrating "mouse.y" and "mouse.y"
     -- Set draw color and draw a filled rectangle
     sdl.SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255)
-    local rect1 = ffi.new("SDL_Rect", { x = 100, y = 100, w = 200, h = 100 })
+    local rect1 = ffi.new("SDL_Rect", { x = mouse.x, y = mouse.y, w = 200, h = 100 })
     sdl.SDL_RenderFillRect(renderer, rect1)
 
+    -- Demonstrating "mouse.button"
     -- Set draw color and draw a filled rectangle
     sdl.SDL_SetRenderDrawColor(renderer, 255, 0, 255, 255)
     local rect2 = ffi.new("SDL_Rect", { x = 100 - 40, y = 100 - 20, w = 200, h = 100 })
     if mouse.button then rect2.y = rect2.y + 150 end
     sdl.SDL_RenderFillRect(renderer, rect2)
+
+    -- Demonstrating "mouse.button_clicked"
+    -- Set draw color and draw a filled rectangle
+    sdl.SDL_SetRenderDrawColor(renderer, 255, 255, 100, 255)
+    -- rect3 is global in order to keep state across drawing frames
+    if mouse.button_clicked then rect3.y = rect3.y + 15 end
+    sdl.SDL_RenderFillRect(renderer, rect3)
 
     -- Present the renderer
     sdl.SDL_RenderPresent(renderer)

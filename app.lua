@@ -65,7 +65,7 @@ end
 -- Global variables
 
 -- Optional require to merge "bounce.lua" with this file ( filename : "app.lua" ) .
---- require("bounce")
+require("bounce")
 
 -- Create a rectangle
 -- rect3 is global in order to keep state across drawing frames
